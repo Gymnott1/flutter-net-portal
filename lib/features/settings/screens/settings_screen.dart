@@ -1,4 +1,4 @@
-
+// <start of features/settings/screens/settings_screen.dart>
 import 'package:flutter/material.dart';
 import 'package:net_app/app_router.dart';
 import 'package:net_app/core/theme/app_theme.dart';
@@ -20,7 +20,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -33,18 +32,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: Text('Account', style: theme.textTheme.titleLarge),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppDimensions.lg, vertical: AppDimensions.xs),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.lg, vertical: AppDimensions.xs),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Name: ${_dataSource.mockUserName}', style: theme.textTheme.bodyLarge),
+                Text('Name: ${_dataSource.mockUserName}',
+                    style: theme.textTheme.bodyLarge),
                 const SizedBox(height: AppDimensions.xs),
-                Text('Phone: ${_dataSource.mockUserPhoneNumber}', style: theme.textTheme.bodyLarge),
+                Text('Phone: ${_dataSource.mockUserPhoneNumber}',
+                    style: theme.textTheme.bodyLarge),
               ],
             ),
           ),
           const Divider(height: AppDimensions.lg),
-
           ListTile(
             leading: const Icon(Icons.palette_outlined),
             title: Text('Appearance', style: theme.textTheme.titleLarge),
@@ -53,7 +54,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: Text('Dark Mode', style: theme.textTheme.bodyLarge),
             value: isDarkMode,
             onChanged: (bool value) {
-              MyApp.themeNotifier.value = value ? ThemeMode.dark : ThemeMode.light;
+              MyApp.themeNotifier.value =
+                  value ? ThemeMode.dark : ThemeMode.light;
             },
             secondary: Icon(
               isDarkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
@@ -62,17 +64,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             activeColor: theme.colorScheme.primary,
           ),
           const Divider(height: AppDimensions.lg),
-
           ListTile(
             leading: const Icon(Icons.bar_chart_outlined), // Changed Icon
-            title: Text('Usage Statistics', style: theme.textTheme.bodyLarge), // Changed Text
+            title: Text('Usage Statistics',
+                style: theme.textTheme.bodyLarge), // Changed Text
             onTap: () {
-              Navigator.of(context).pushNamed(AppRouter.statisticsRoute); // Navigate to statistics
+              Navigator.of(context).pushNamed(AppRouter.statisticsRoute);
             },
           ),
           ListTile(
-            leading: Icon(Icons.info_outline, color: theme.colorScheme.secondary),
-            title: Text('About ${AppConstants.appName}', style: theme.textTheme.bodyLarge),
+            leading:
+                Icon(Icons.info_outline, color: theme.colorScheme.secondary),
+            title: Text('About ${AppConstants.appName}',
+                style: theme.textTheme.bodyLarge),
             onTap: () {
               showDialog(
                 context: context,
@@ -91,17 +95,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.help_outline, color: theme.colorScheme.secondary),
+            leading:
+                Icon(Icons.help_outline, color: theme.colorScheme.secondary),
             title: Text('Help & Support', style: theme.textTheme.bodyLarge),
             onTap: () {
-               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Navigate to Help & Support page (Not Implemented)')),
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text(
+                        'Navigate to Help & Support page (Not Implemented)')),
               );
             },
           ),
-
           const Divider(height: AppDimensions.lg),
-
           Padding(
             padding: const EdgeInsets.all(AppDimensions.lg),
             child: ElevatedButton.icon(
@@ -112,8 +117,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 foregroundColor: theme.colorScheme.onError,
               ),
               onPressed: () {
+                // Navigate to MainScreen after logout
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                  AppRouter.loginRoute,
+                  AppRouter.mainRoute, // Changed from loginRoute
                   (Route<dynamic> route) => false,
                 );
               },
@@ -124,3 +130,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 }
+// <end of features/settings/screens/settings_screen.dart>

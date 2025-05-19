@@ -21,7 +21,7 @@ class PackageModel {
 
   String get fullDescription {
     if (isUnlimiNET) {
-      return "$name";
+      return name;
     }
     return "$name $validity";
   }

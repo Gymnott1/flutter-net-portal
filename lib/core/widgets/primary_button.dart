@@ -24,22 +24,22 @@ class PrimaryButton extends StatelessWidget {
       style: (theme.elevatedButtonTheme.style ??
               const ElevatedButtonThemeData().style)
           ?.copyWith(
-            backgroundColor: MaterialStateProperty.resolveWith<Color?>((
-              Set<MaterialState> states,
+            backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+              Set<WidgetState> states,
             ) {
               if (backgroundColor != null) return backgroundColor;
-              if (states.contains(MaterialState.disabled)) {
+              if (states.contains(WidgetState.disabled)) {
                 return theme.colorScheme.primary.withOpacity(0.3);
               }
               return theme.colorScheme.primary;
             }),
-            foregroundColor: MaterialStateProperty.all<Color?>(
+            foregroundColor: WidgetStateProperty.all<Color?>(
               textColor ??
                   (theme.brightness == Brightness.light
                       ? AppColors.onPrimaryLight
                       : AppColors.onPrimaryDark),
             ),
-            minimumSize: MaterialStateProperty.all<Size>(
+            minimumSize: WidgetStateProperty.all<Size>(
               const Size(double.infinity, AppDimensions.buttonHeight),
             ),
           ),

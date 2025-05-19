@@ -135,10 +135,12 @@ class _UserStatisticsScreenState extends State<UserStatisticsScreen> {
             interval: 1,
             getTitlesWidget: (double value, TitleMeta meta) {
               final index = value.toInt();
-              if (index < 0 || index >= _weekDays.length)
+              if (index < 0 || index >= _weekDays.length) {
                 return const SizedBox.shrink();
+              }
               return SideTitleWidget(
                 space: 8,
+                meta: meta,
                 //axisSide: meta.axisSide,
                 child: Text(
                   _weekDays[index],
@@ -147,7 +149,6 @@ class _UserStatisticsScreenState extends State<UserStatisticsScreen> {
                     fontSize: 10,
                   ),
                 ),
-                meta: meta,
               );
             },
           ),
@@ -162,6 +163,7 @@ class _UserStatisticsScreenState extends State<UserStatisticsScreen> {
                 return SideTitleWidget(
                   //axisSide: meta.axisSide,
                   space: 0,
+                  meta: meta,
                   child: Text(
                     value.toInt().toString(),
                     style: TextStyle(
@@ -170,7 +172,6 @@ class _UserStatisticsScreenState extends State<UserStatisticsScreen> {
                     ),
                     textAlign: TextAlign.left,
                   ),
-                  meta: meta,
                 );
               }
               return const SizedBox.shrink();
@@ -325,11 +326,13 @@ class _UserStatisticsScreenState extends State<UserStatisticsScreen> {
             showTitles: true,
             getTitlesWidget: (double value, TitleMeta meta) {
               final index = value.toInt();
-              if (index < 0 || index >= _months.length)
+              if (index < 0 || index >= _months.length) {
                 return const SizedBox.shrink();
+              }
               return SideTitleWidget(
                 ///axisSide: meta.axisSide,
                 space: AppDimensions.xs,
+                meta: meta,
                 child: Text(
                   _months[index],
                   style: TextStyle(
@@ -338,7 +341,6 @@ class _UserStatisticsScreenState extends State<UserStatisticsScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                meta: meta,
               );
             },
             reservedSize: 28,
@@ -354,6 +356,7 @@ class _UserStatisticsScreenState extends State<UserStatisticsScreen> {
                 return SideTitleWidget(
                   //axisSide: meta.axisSide,
                   space: 0,
+                  meta: meta,
                   child: Text(
                     NumberFormat.compact().format(value.toInt()),
                     style: TextStyle(
@@ -362,7 +365,6 @@ class _UserStatisticsScreenState extends State<UserStatisticsScreen> {
                     ),
                     textAlign: TextAlign.left,
                   ),
-                  meta: meta,
                 );
               }
               return const SizedBox.shrink();

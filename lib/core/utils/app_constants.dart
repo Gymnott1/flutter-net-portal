@@ -1,6 +1,6 @@
 class AppConstants {
-  static const String appName = 'Amazons Net';
-  static const String slogan = 'Fast. Reliable. Affordable.';
+  static const String appName = 'Amazons Enterprise';
+  static const String slogan = 'Fast ꞏ  Reliable  ꞏ Affordable';
   static const String companyFullName = 'Lence Amazons LTD.';
   static const String copyrightYear = '© 2025'; // As per screenshot
 

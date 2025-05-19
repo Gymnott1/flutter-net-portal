@@ -1,4 +1,4 @@
-
+// <start of features/home/screens/home_screen.dart>
 import 'package:flutter/material.dart';
 import 'package:net_app/app_router.dart'; // Added for navigation
 import 'package:net_app/core/theme/app_theme.dart';
@@ -44,9 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void _toggleFavorite(String packageId) {
     _dataSource.toggleFavoriteStatus(packageId);
     _loadPackages(); // Reload and re-sort to reflect the change
-
     // Optional: Show a SnackBar
-    final package = _packages.firstWhere((p) => p.id == packageId, orElse: () => _dataSource.getPackages().firstWhere((p) => p.id == packageId)); // Ensure we find the package
+    final package = _packages.firstWhere((p) => p.id == packageId,
+        orElse: () => _dataSource
+            .getPackages()
+            .firstWhere((p) => p.id == packageId)); // Ensure we find the package
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -55,11 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
               : "'${package.name}' removed from favorites.",
         ),
         duration: const Duration(seconds: 2),
-        backgroundColor: package.isFavorite ? AppColors.successLight : AppColors.infoLight,
+        backgroundColor: package.isFavorite
+            ? AppColors.successLight
+            : AppColors.infoLight,
       ),
     );
   }
-
 
   void _refreshAccount() {
     // Simulate fetching new data
@@ -74,19 +77,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _connectWithVoucher() async { // Made async
+  Future<void> _connectWithVoucher() async {
+    // Made async
     if (_voucherController.text.isNotEmpty) {
       setState(() {
         _isConnectingVoucher = true;
       });
-
       // Simulate API call or processing
       await Future.delayed(const Duration(seconds: 2));
-
-      if (mounted) { // Check if widget is still in the tree
+      if (mounted) {
+        // Check if widget is still in the tree
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Connecting with voucher: ${_voucherController.text} - Success!'),
+            content: Text(
+                'Connecting with voucher: ${_voucherController.text} - Success!'),
             backgroundColor: AppColors.successLight,
           ),
         );
@@ -118,38 +122,61 @@ class _HomeScreenState extends State<HomeScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            pinned: false, 
+            pinned: false, // Set to true if you want it to stick
             floating: true,
-            automaticallyImplyLeading: false, 
+            // automaticallyImplyLeading: true, // Let Flutter handle the back button if appropriate
+            leading: IconButton( // Explicit back button
+              icon: Icon(Icons.arrow_back, color: theme.iconTheme.color),
+              tooltip: 'Back to Main Menu',
+              onPressed: () {
+                // Navigate back to MainScreen, removing all routes until MainScreen
+                // Or simply pop if MainScreen is directly below.
+                // If login flow clears stack, this might need specific navigation.
+                // Assuming MainScreen is on the stack. If not, use pushNamedAndRemoveUntil.
+                if (Navigator.canPop(context)) {
+                     Navigator.pop(context);
+                } else {
+                    // Fallback if somehow it can't pop (e.g., deep linked here directly)
+                    Navigator.pushNamedAndRemoveUntil(context, AppRouter.mainRoute, (route) => false);
+                }
+              },
+            ),
             backgroundColor: theme.scaffoldBackgroundColor,
             elevation: 0,
-            titleSpacing: AppDimensions.md,
-            title: Row(
-              children: [
-                const AppLogo(height: 40),
-                const Spacer(),
-                IconButton(
-                  icon: Icon(
-                    Icons.notifications_none_outlined,
-                    color: theme.iconTheme.color,
-                  ),
-                  tooltip: 'Notifications', 
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRouter.notificationsRoute); 
-                  },
+            titleSpacing: AppDimensions.xs, // Adjust if needed with leading button
+            title: const AppLogo(height: 36), // Keep logo concise
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.shopping_bag_outlined,
+                  color: theme.iconTheme.color,
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.settings_outlined,
-                    color: theme.iconTheme.color,
-                  ),
-                  tooltip: 'Settings', 
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(AppRouter.settingsRoute); 
-                  },
+                tooltip: 'Shop',
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRouter.shopRoute);
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.notifications_none_outlined,
+                  color: theme.iconTheme.color,
                 ),
-              ],
-            ),
+                tooltip: 'Notifications',
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRouter.notificationsRoute);
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.settings_outlined,
+                  color: theme.iconTheme.color,
+                ),
+                tooltip: 'Settings',
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRouter.settingsRoute);
+                },
+              ),
+            ],
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md),
@@ -163,8 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 AccountDetailsCard(
                   userName: _dataSource.mockUserName,
                   phoneNumber: _dataSource.mockUserPhoneNumber,
-                  credit: 0, 
-                  netPoints: 0, 
+                  credit: 0,
+                  netPoints: 0,
                   onRefresh: _refreshAccount,
                 ),
                 if (_adImages.isNotEmpty) AdSliderWidget(adImagePaths: _adImages),
@@ -173,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   subscriptionName: _dataSource.mockActiveSubscription,
                   dataUsed: _dataSource.mockDataUsed,
                   expiryDate: _dataSource.mockExpiryDate,
-                  onReconnect: () { 
+                  onReconnect: () {
                     // This callback in ActiveSubscriptionCard handles its own SnackBar
                   },
                 ),
@@ -188,35 +215,34 @@ class _HomeScreenState extends State<HomeScreen> {
                             decoration: const InputDecoration(
                               hintText: 'Enter Voucher Code',
                               contentPadding: EdgeInsets.symmetric(
-                                horizontal: AppDimensions.md,
-                                vertical: AppDimensions.sm, 
-                              ),
+                                  horizontal: AppDimensions.md,
+                                  vertical: AppDimensions.sm),
                               border: OutlineInputBorder(),
-                              enabledBorder: OutlineInputBorder( 
+                              enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
-                              focusedBorder: OutlineInputBorder( 
+                              focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: AppColors.primaryLight, width: 1.5
-                                ),
+                                    color: AppColors.primaryLight, width: 1.5),
                               ),
                             ),
-                             enabled: !_isConnectingVoucher, 
+                            enabled: !_isConnectingVoucher,
                           ),
                         ),
                         const SizedBox(width: AppDimensions.sm),
                         ElevatedButton(
-                          onPressed: _isConnectingVoucher ? null : _connectWithVoucher,
+                          onPressed: _isConnectingVoucher
+                              ? null
+                              : _connectWithVoucher,
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: AppColors.onPrimaryLight, 
-                            backgroundColor: AppColors.accentLight, 
-                             disabledBackgroundColor: AppColors.accentLight.withOpacity(0.5),
-                            padding: const EdgeInsets.symmetric( 
-                              horizontal: AppDimensions.md,
-                              vertical: 14, 
-                            ),
+                            foregroundColor: AppColors.onPrimaryLight,
+                            backgroundColor: AppColors.accentLight,
+                            disabledBackgroundColor:
+                                AppColors.accentLight.withOpacity(0.5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppDimensions.md, vertical: 14),
                             textStyle: theme.textTheme.labelMedium,
-                            minimumSize: const Size(100, 48), 
+                            minimumSize: const Size(100, 48),
                           ),
                           child: _isConnectingVoucher
                               ? const SizedBox(
@@ -224,7 +250,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2.5,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                 )
                               : const Text('CONNECT'),
@@ -237,10 +264,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: const EdgeInsets.all(AppDimensions.md),
                   decoration: BoxDecoration(
-                    color: theme.cardColor, 
-                    borderRadius: BorderRadius.circular(
-                      AppDimensions.cardRadius,
-                    ),
+                    color: theme.cardColor,
+                    borderRadius:
+                        BorderRadius.circular(AppDimensions.cardRadius),
                     border: Border.all(
                       color: theme.colorScheme.primary.withOpacity(0.5),
                     ),
@@ -255,27 +281,22 @@ class _HomeScreenState extends State<HomeScreen> {
                           Chip(
                             label: Text(
                               "New!",
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: Colors.white,
-                              ),
+                              style: theme.textTheme.bodySmall
+                                  ?.copyWith(color: Colors.white),
                             ),
-                            backgroundColor: AppColors.errorLight, 
+                            backgroundColor: AppColors.errorLight,
                             padding: const EdgeInsets.symmetric(
-                              horizontal: AppDimensions.xs,
-                              vertical: 0,
-                            ),
+                                horizontal: AppDimensions.xs, vertical: 0),
                             labelPadding: const EdgeInsets.symmetric(
-                              horizontal: AppDimensions.xs,
-                            ),
+                                horizontal: AppDimensions.xs),
                           ),
                         ],
                       ),
                       const SizedBox(height: AppDimensions.sm),
                       Text(
                         "Daily FREE 20 Minutes UnlimiNET",
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         "FREE (Available from 6AM to 8AM daily)",
@@ -308,14 +329,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 )
               : SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppDimensions.md),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final package = _packages[index];
                         return PackageListItem(
                           package: package,
-                          onToggleFavorite: () => _toggleFavorite(package.id),
+                          onToggleFavorite: () =>
+                              _toggleFavorite(package.id),
                         );
                       },
                       childCount: _packages.length,
@@ -335,48 +358,44 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: AppDimensions.xs),
                 Text(
                   AppConstants.customerService1,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.bodyLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppDimensions.md),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.xl,
-                  ), 
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppDimensions.xl),
                   child: ElevatedButton.icon(
                     icon: const Icon(
                       Icons.chat_bubble_outline,
-                    ), 
+                    ),
                     label: const Text("Join our WhatsApp Group"),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
-                            'Opening WhatsApp... (Implement URL Launcher)',
-                          ),
+                              'Opening WhatsApp... (Implement URL Launcher)'),
                           backgroundColor: AppColors.infoLight,
                         ),
                       );
+                      // Example: launchUrl(Uri.parse(AppConstants.whatsappGroupLink));
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(
-                        0xFF25D366,
-                      ), 
+                      backgroundColor: const Color(0xFF25D366),
                       foregroundColor: Colors.white,
                     ),
                   ),
                 ),
                 const SizedBox(height: AppDimensions.xl),
                 Text(
-                  "Powered by © ${DateTime.now().year} Netic ISP", 
+                  "Powered by © ${DateTime.now().year} Netic ISP",
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall,
                 ),
                 const SizedBox(
                   height: AppDimensions.md,
-                ), 
+                ),
               ]),
             ),
           ),
@@ -385,3 +404,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+// <end of features/home/screens/home_screen.dart>

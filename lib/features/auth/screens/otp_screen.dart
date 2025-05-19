@@ -1,15 +1,18 @@
+// <start of features/auth/screens/otp_screen.dart>
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:net_app/app_router.dart';
 import 'package:net_app/core/theme/app_theme.dart';
-import 'package:net_app/core/utils/app_constants.dart';
 import 'package:net_app/core/widgets/app_logo.dart';
 import 'package:net_app/core/widgets/primary_button.dart';
 import 'package:net_app/features/auth/widgets/auth_footer.dart';
 
 class OtpScreen extends StatefulWidget {
-  final String? phoneNumber; // To display if needed
-  const OtpScreen({super.key, this.phoneNumber});
+  final String? phoneNumber; // This is the ACTUAL number OTP was sent to (for resend logic)
+  final String? displayIdentifier; // This is what's SHOWN to the user (phone or account_no)
+  final String targetRoute;
+  const OtpScreen(
+      {super.key, this.phoneNumber, this.displayIdentifier, required this.targetRoute});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -29,13 +32,15 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   void startResendTimer() {
-    _resendTimerSeconds = 59; // As per screenshot
+    _resendTimerSeconds = 59;
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_resendTimerSeconds > 0) {
-        setState(() {
-          _resendTimerSeconds--;
-        });
+        if (mounted) {
+          setState(() {
+            _resendTimerSeconds--;
+          });
+        }
       } else {
         _timer?.cancel();
       }
@@ -45,11 +50,8 @@ class _OtpScreenState extends State<OtpScreen> {
   Future<void> _verifyOtp() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-      // Simulate API call
       await Future.delayed(const Duration(seconds: 2));
       setState(() => _isLoading = false);
-
-      // Mock success
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Verification successful!'),
@@ -58,7 +60,7 @@ class _OtpScreenState extends State<OtpScreen> {
       );
       Navigator.of(
         context,
-      ).pushNamedAndRemoveUntil(AppRouter.homeRoute, (route) => false);
+      ).pushNamedAndRemoveUntil(widget.targetRoute, (route) => false);
     }
   }
 
@@ -66,14 +68,15 @@ class _OtpScreenState extends State<OtpScreen> {
     if (_resendTimerSeconds == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          // Use widget.phoneNumber for the actual resend target
           content: Text(
-            'New code sent to ${widget.phoneNumber ?? 'your number'}',
+            'New code sent to phone associated with ${widget.displayIdentifier ?? 'your account/number'}',
           ),
           backgroundColor: AppColors.infoLight,
         ),
       );
       startResendTimer();
-      // Add actual resend logic here
+      // Actual resend logic would use widget.phoneNumber
     }
   }
 
@@ -87,6 +90,11 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Determine if the displayIdentifier looks like an account number or phone
+    // This is a heuristic; adjust as needed.
+    bool isAccountLogin = widget.displayIdentifier != null && !widget.displayIdentifier!.startsWith("07") && !widget.displayIdentifier!.startsWith("+254");
+
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -101,15 +109,18 @@ class _OtpScreenState extends State<OtpScreen> {
                   const AppLogo(height: 80),
                   const SizedBox(height: AppDimensions.xl * 1.5),
                   Text(
-                    "Enter verification code sent via SMS",
+                    "Enter verification code",
                     textAlign: TextAlign.center,
                     style: theme.textTheme.titleLarge,
                   ),
-                  if (widget.phoneNumber != null)
+                  if (widget.displayIdentifier != null)
                     Padding(
                       padding: const EdgeInsets.only(top: AppDimensions.sm),
                       child: Text(
-                        "To ${widget.phoneNumber}",
+                        // Show different message based on what displayIdentifier is
+                        isAccountLogin
+                          ? "Sent to phone registered with Account: ${widget.displayIdentifier}"
+                          : "Sent to: ${widget.displayIdentifier}",
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium,
                       ),
@@ -117,14 +128,15 @@ class _OtpScreenState extends State<OtpScreen> {
                   const SizedBox(height: AppDimensions.lg),
                   TextFormField(
                     controller: _otpController,
-                    keyboardType: TextInputType.number,
+                    // ... (rest of TextFormField)
+                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.headlineMedium,
                     decoration: const InputDecoration(
                       hintText: "------",
-                      counterText: "", // Hide counter
+                      counterText: "",
                     ),
-                    maxLength: 6, // Assuming 6 digit OTP
+                    maxLength: 6,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the OTP';
@@ -151,12 +163,16 @@ class _OtpScreenState extends State<OtpScreen> {
                           ? "Resend code in: 0:${_resendTimerSeconds.toString().padLeft(2, '0')} seconds"
                           : "Resend code",
                       style: TextStyle(
-                        color:
-                            _resendTimerSeconds == 0
-                                ? theme.colorScheme.primary
-                                : theme.textTheme.bodySmall?.color,
+                        color: _resendTimerSeconds == 0
+                            ? theme.colorScheme.primary
+                            : theme.textTheme.bodySmall?.color,
                       ),
                     ),
+                  ),
+                   const SizedBox(height: AppDimensions.md),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text("Back to Sign In"),
                   ),
                   const SizedBox(height: AppDimensions.xl),
                   const AuthFooter(),
@@ -169,3 +185,4 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 }
+// <end of features/auth/screens/otp_screen.dart>

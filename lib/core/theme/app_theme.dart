@@ -136,25 +136,25 @@ class AppTheme {
     double? minimumWidth,
   }) {
     return ButtonStyle(
-      backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-        if (states.contains(MaterialState.disabled)) {
+      backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+        if (states.contains(WidgetState.disabled)) {
           return backgroundColor.withOpacity(0.3);
         }
-        if (states.contains(MaterialState.pressed)) {
+        if (states.contains(WidgetState.pressed)) {
           return backgroundColor.withOpacity(0.8);
         }
         return backgroundColor;
       }),
-      foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-        if (states.contains(MaterialState.disabled)) {
+      foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+        if (states.contains(WidgetState.disabled)) {
           return foregroundColor.withOpacity(0.5);
         }
         return foregroundColor;
       }),
-      overlayColor: MaterialStateProperty.resolveWith<Color>((states) {
+      overlayColor: WidgetStateProperty.resolveWith<Color>((states) {
         return foregroundColor.withOpacity(0.1);
       }),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.buttonRadius),
           side:
@@ -163,15 +163,15 @@ class AppTheme {
                   : BorderSide.none,
         ),
       ),
-      minimumSize: MaterialStateProperty.all<Size>(
+      minimumSize: WidgetStateProperty.all<Size>(
         Size(minimumWidth ?? 0, height),
       ),
-      padding: MaterialStateProperty.all<EdgeInsets>(
+      padding: WidgetStateProperty.all<EdgeInsets>(
         const EdgeInsets.symmetric(horizontal: AppDimensions.lg),
       ),
-      elevation: MaterialStateProperty.resolveWith<double>((states) {
-        if (states.contains(MaterialState.disabled)) return 0;
-        if (states.contains(MaterialState.pressed)) return 1;
+      elevation: WidgetStateProperty.resolveWith<double>((states) {
+        if (states.contains(WidgetState.disabled)) return 0;
+        if (states.contains(WidgetState.pressed)) return 1;
         return 2;
       }),
     );
@@ -233,18 +233,18 @@ class AppTheme {
 
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(
+          foregroundColor: WidgetStateProperty.all<Color>(
             AppColors.primaryLight,
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
+          textStyle: WidgetStateProperty.all<TextStyle>(
             GoogleFonts.roboto(fontWeight: FontWeight.w600),
           ),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppDimensions.sm),
             ),
           ),
-          overlayColor: MaterialStateProperty.all<Color>(
+          overlayColor: WidgetStateProperty.all<Color>(
             AppColors.primaryLight.withOpacity(0.1),
           ),
         ),
@@ -305,11 +305,11 @@ class AppTheme {
 
       // Checkbox & Toggle
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
+        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
             return AppColors.textTertiaryLight;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primaryLight;
           }
           return Colors.transparent;
@@ -319,20 +319,20 @@ class AppTheme {
       ),
 
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
+        thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
             return AppColors.textTertiaryLight;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primaryLight;
           }
           return Colors.white;
         }),
-        trackColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
+        trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
             return AppColors.dividerLight;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primaryLight.withOpacity(0.4);
           }
           return AppColors.textTertiaryLight;
@@ -404,8 +404,6 @@ class AppTheme {
         errorContainer: AppColors.errorLight.withOpacity(0.1),
         onErrorContainer: AppColors.errorLight,
         surface: AppColors.cardLight,
-        background: AppColors.scaffoldLight,
-        onBackground: AppColors.textPrimaryLight,
         onSurface: AppColors.textPrimaryLight,
         onPrimary: AppColors.onPrimaryLight,
         onSecondary: Colors.white,
@@ -472,18 +470,18 @@ class AppTheme {
 
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(
+          foregroundColor: WidgetStateProperty.all<Color>(
             AppColors.primaryDark,
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
+          textStyle: WidgetStateProperty.all<TextStyle>(
             GoogleFonts.roboto(fontWeight: FontWeight.w600),
           ),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppDimensions.sm),
             ),
           ),
-          overlayColor: MaterialStateProperty.all<Color>(
+          overlayColor: WidgetStateProperty.all<Color>(
             AppColors.primaryDark.withOpacity(0.15),
           ),
         ),
@@ -544,11 +542,11 @@ class AppTheme {
 
       // Checkbox & Toggle
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
+        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
             return AppColors.textTertiaryDark;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primaryDark;
           }
           return Colors.transparent;
@@ -558,20 +556,20 @@ class AppTheme {
       ),
 
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
+        thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
             return AppColors.textTertiaryDark;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primaryDark;
           }
           return Colors.white;
         }),
-        trackColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.disabled)) {
+        trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
             return AppColors.dividerDark;
           }
-          if (states.contains(MaterialState.selected)) {
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primaryDark.withOpacity(0.4);
           }
           return AppColors.textTertiaryDark;
@@ -643,8 +641,6 @@ class AppTheme {
         errorContainer: AppColors.errorDark.withOpacity(0.1),
         onErrorContainer: AppColors.errorDark,
         surface: AppColors.cardDark,
-        background: AppColors.scaffoldDark,
-        onBackground: AppColors.textPrimaryDark,
         onSurface: AppColors.textPrimaryDark,
         onPrimary: AppColors.onPrimaryDark,
         onSecondary: AppColors.textPrimaryDark,

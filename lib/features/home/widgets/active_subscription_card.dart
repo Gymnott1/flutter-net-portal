@@ -127,7 +127,7 @@ class _ActiveSubscriptionCardState extends State<ActiveSubscriptionCard> {
                     ),
                   ).copyWith(
                     // Ensure the button retains its size during loading
-                    minimumSize: MaterialStateProperty.all(
+                    minimumSize: WidgetStateProperty.all(
                       const Size(120, 36),
                     ), // Adjust size as needed
                   ),
